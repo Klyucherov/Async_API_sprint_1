@@ -1,0 +1,572 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "Read-only API для онлайн-кинотеатра",
+    "description": "Информация о фильмах, жанрах и людях, участвовавших в создании произведения",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/v1/films/search": {
+      "get": {
+        "tags": ["Фильмы"],
+        "summary": "Поиск фильмов",
+        "description": "Поиск по фильмам по запросу",
+        "operationId": "film_search_api_v1_films_search_get",
+        "parameters": [
+          {
+            "required": false,
+            "schema": {
+              "title": "Page Number",
+              "minimum": 1.0,
+              "type": "integer",
+              "default": 1
+            },
+            "name": "page_number",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Page Size",
+              "maximum": 100.0,
+              "minimum": 1.0,
+              "type": "integer",
+              "default": 25
+            },
+            "name": "page_size",
+            "in": "query"
+          },
+          {
+            "required": true,
+            "schema": { "title": "Query", "type": "string" },
+            "name": "query",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Список фильмов с id, названием и рейтингом",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Film Search Api V1 Films Search Get",
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/FilmBase" }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/films/{film_id}": {
+      "get": {
+        "tags": ["Фильмы"],
+        "summary": "Информация о фильме по ID",
+        "description": "Данный endpoint предоставляет полную информацию о фильме по ID",
+        "operationId": "film_details_api_v1_films__film_id__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": { "title": "Film Id", "type": "string" },
+            "name": "film_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ID, название, описание, жанры, рейтинг, список участников кинопроизведения",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/FilmFull" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/films": {
+      "get": {
+        "tags": ["Фильмы"],
+        "summary": "Список фильмов",
+        "description": "Список фильмов с пагинацией, фильтрацией по жанрам и сортировкой по году или рейтингу",
+        "operationId": "film_list_api_v1_films_get",
+        "parameters": [
+          {
+            "required": false,
+            "schema": {
+              "title": "Page Number",
+              "minimum": 1.0,
+              "type": "integer",
+              "default": 1
+            },
+            "name": "page_number",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Page Size",
+              "maximum": 100.0,
+              "minimum": 1.0,
+              "type": "integer",
+              "default": 25
+            },
+            "name": "page_size",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Sort By Rating",
+              "pattern": "^(asc|desc)$",
+              "type": "string",
+              "default": "desc"
+            },
+            "name": "sort_by_rating",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": { "title": "Filter[Genre]", "type": "string" },
+            "name": "filter[genre]",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Список фильмов с id, названием и рейтингом",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Film List Api V1 Films Get",
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/FilmBase" }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/persons/search": {
+      "get": {
+        "tags": ["Персоны"],
+        "summary": "Поиск персон",
+        "description": "Поиск по персонам по запросу",
+        "operationId": "person_search_api_v1_persons_search_get",
+        "parameters": [
+          {
+            "required": false,
+            "schema": {
+              "title": "Page Number",
+              "minimum": 1.0,
+              "type": "integer",
+              "default": 1
+            },
+            "name": "page_number",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Page Size",
+              "maximum": 100.0,
+              "minimum": 1.0,
+              "type": "integer",
+              "default": 25
+            },
+            "name": "page_size",
+            "in": "query"
+          },
+          {
+            "required": true,
+            "schema": { "title": "Query", "type": "string" },
+            "name": "query",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Список персон с id, именем и ролью",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Person Search Api V1 Persons Search Get",
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/PersonFull" }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/persons/{person_id}/film": {
+      "get": {
+        "tags": ["Персоны"],
+        "summary": "Информация о фильмах по персоне",
+        "description": "Данный endpoint предоставляет информацию о фильмах по персоне Id, title, imdb_rating",
+        "operationId": "films_with_person_details_api_v1_persons__person_id__film_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": { "title": "Person Id", "type": "string" },
+            "name": "person_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ID, полное имя, роль",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Films With Person Details Api V1 Persons  Person Id  Film Get",
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/FilmBase" }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/persons/{person_id}": {
+      "get": {
+        "tags": ["Персоны"],
+        "summary": "Информация о персоне по ID",
+        "description": "Данный endpoint предоставляет полную информацию о персоне по ID",
+        "operationId": "person_details_api_v1_persons__person_id__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": { "title": "Person Id", "type": "string" },
+            "name": "person_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ID, полное имя, роль",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/PersonFull" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/persons": {
+      "get": {
+        "tags": ["Персоны"],
+        "summary": "Список персон",
+        "description": "Список персон с пагинацией",
+        "operationId": "person_list_api_v1_persons_get",
+        "parameters": [
+          {
+            "required": false,
+            "schema": {
+              "title": "Page Number",
+              "minimum": 1.0,
+              "type": "integer",
+              "default": 1
+            },
+            "name": "page_number",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Page Size",
+              "maximum": 100.0,
+              "minimum": 1.0,
+              "type": "integer",
+              "default": 25
+            },
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Список персон с id, названием и рейтингом",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Person List Api V1 Persons Get",
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/PersonBase" }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/genres/{genre_id}": {
+      "get": {
+        "tags": ["Жанры"],
+        "summary": "Информация о жанре",
+        "description": "Данный endpoint предоставляет информацию о жанре",
+        "operationId": "genre_details_api_v1_genres__genre_id__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": { "title": "Genre Id", "type": "string" },
+            "name": "genre_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ID, название жанра",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Genre" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/genres": {
+      "get": {
+        "tags": ["Жанры"],
+        "summary": "Список жанров",
+        "description": "Список жанров с пагинацией",
+        "operationId": "film_list_api_v1_genres_get",
+        "parameters": [
+          {
+            "required": false,
+            "schema": {
+              "title": "Page Number",
+              "minimum": 1.0,
+              "type": "integer",
+              "default": 1
+            },
+            "name": "page_number",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Page Size",
+              "maximum": 100.0,
+              "minimum": 1.0,
+              "type": "integer",
+              "default": 25
+            },
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Список жанров с id и названием",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Film List Api V1 Genres Get",
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Genre" }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "FilmBase": {
+        "title": "FilmBase",
+        "required": ["id", "title"],
+        "type": "object",
+        "properties": {
+          "id": { "title": "Id", "type": "string" },
+          "title": { "title": "Title", "type": "string" },
+          "imdb_rating": { "title": "Imdb Rating", "type": "number" }
+        }
+      },
+      "FilmFull": {
+        "title": "FilmFull",
+        "required": ["id", "title"],
+        "type": "object",
+        "properties": {
+          "id": { "title": "Id", "type": "string" },
+          "title": { "title": "Title", "type": "string" },
+          "imdb_rating": { "title": "Imdb Rating", "type": "number" },
+          "description": { "title": "Description", "type": "string" },
+          "creation_date": {
+            "title": "Creation Date",
+            "type": "string",
+            "format": "date"
+          },
+          "genres": {
+            "title": "Genres",
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Genre" },
+            "default": []
+          },
+          "actors": {
+            "title": "Actors",
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/PersonBase" },
+            "default": []
+          },
+          "directors": {
+            "title": "Directors",
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/PersonBase" },
+            "default": []
+          },
+          "writers": {
+            "title": "Writers",
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/PersonBase" },
+            "default": []
+          }
+        }
+      },
+      "Genre": {
+        "title": "Genre",
+        "required": ["id", "name"],
+        "type": "object",
+        "properties": {
+          "id": { "title": "Id", "type": "string" },
+          "name": { "title": "Name", "type": "string" }
+        }
+      },
+      "HTTPValidationError": {
+        "title": "HTTPValidationError",
+        "type": "object",
+        "properties": {
+          "detail": {
+            "title": "Detail",
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ValidationError" }
+          }
+        }
+      },
+      "PersonBase": {
+        "title": "PersonBase",
+        "required": ["id", "full_name"],
+        "type": "object",
+        "properties": {
+          "id": { "title": "Id", "type": "string" },
+          "full_name": { "title": "Full Name", "type": "string" }
+        }
+      },
+      "PersonFull": {
+        "title": "PersonFull",
+        "required": ["id", "full_name"],
+        "type": "object",
+        "properties": {
+          "id": { "title": "Id", "type": "string" },
+          "full_name": { "title": "Full Name", "type": "string" },
+          "role": {
+            "title": "Role",
+            "type": "array",
+            "items": { "type": "string" },
+            "default": []
+          },
+          "film_ids": {
+            "title": "Film Ids",
+            "type": "array",
+            "items": { "type": "string", "format": "uuid" },
+            "default": []
+          }
+        }
+      },
+      "ValidationError": {
+        "title": "ValidationError",
+        "required": ["loc", "msg", "type"],
+        "type": "object",
+        "properties": {
+          "loc": {
+            "title": "Location",
+            "type": "array",
+            "items": { "anyOf": [{ "type": "string" }, { "type": "integer" }] }
+          },
+          "msg": { "title": "Message", "type": "string" },
+          "type": { "title": "Error Type", "type": "string" }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,47 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:13
+    container_name: db_container
+    env_file:
+      - ./.db.env
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "${POSTGRES_DB}", "-U", "${POSTGRES_USER}" ]
+      interval: 2s
+      timeout: 2s
+      retries: 5
+    volumes:
+      - postgresql_volume:/var/lib/postgresql/data
+    expose:
+      - 5432
+
+  django_gunicorn:
+    build:
+      context: ./movies_admin
+    volumes:
+      - static_volume:/home/app/movies_admin/staticfiles
+      - media_volume:/home/app/movies_admin/mediafiles
+    depends_on:
+      db:
+        condition: service_healthy
+    container_name: django_container
+    restart: unless-stopped
+    env_file:
+      - ./movies_admin/.env
+
+  nginx:
+    image: nginx:1.22.1
+    container_name: nginx_container
+    volumes:
+      - static_volume:/home/app/movies_admin/staticfiles
+      - media_volume:/home/app/movies_admin/mediafiles
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - "80:80"
+    depends_on:
+      - django_gunicorn
+volumes:
+  static_volume:
+  media_volume:
+  postgresql_volume:
