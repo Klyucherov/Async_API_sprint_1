@@ -1,7 +1,7 @@
 from functools import lru_cache
 from typing import List, Optional
 
-from aioredis import Redis
+from redis.asyncio import Redis
 from db.elastic import get_elastic
 from db.redis import get_redis
 from elasticsearch import AsyncElasticsearch

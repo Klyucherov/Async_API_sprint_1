@@ -6,7 +6,7 @@ import psycopg2
 from elasticsearch import Elasticsearch
 from elasticsearch.exceptions import ConnectionError as ElasticConnectionError
 from psycopg2.extras import DictCursor
-from redis import Redis
+from redis.asyncio import Redis
 from redis import exceptions as redis_exceptions
 
 from .backoff_handlers import (elastic_conn_backoff_hdlr, pg_conn_backoff_hdlr,

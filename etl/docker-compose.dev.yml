@@ -15,7 +15,7 @@ services:
       - postgresql_volume_compose:/var/lib/postgresql/data
       - ./etl/dump.sql:/docker-entrypoint-initdb.d/dump.sql
     ports:
-      - "5432:5432"
+      - "${DB_PORT}:${DB_PORT}"
 
   redis:
     image: redis:7.0.7
@@ -29,7 +29,7 @@ services:
     volumes:
       - redis_volume:/data
     ports:
-      - "6379:6379"
+      - "${PORT_REDIS}:${PORT_REDIS}"
 
   elastic:
     image: elasticsearch:8.5.3
@@ -40,7 +40,7 @@ services:
       - USE_SSL=false
     container_name: elastic_compose
     ports:
-      - "9200:9200"
+      - "${PORT_ELASTIC}:${PORT_ELASTIC}"
     volumes:
       - elastic_volume_compose:/usr/share/elasticsearch/data
 
@@ -49,7 +49,7 @@ services:
     environment:
       - ELASTICSEARCH_HOSTS=["http://elastic:9200"]
     ports:
-      - "5601:5601"
+      - "${PORT_KIBANA}:${PORT_KIBANA}"
     container_name: kibana_compose
     depends_on:
       - elastic

@@ -1,7 +1,7 @@
 import logging
 from typing import List, Optional
 
-from aioredis import Redis
+from redis.asyncio import Redis
 from api.v1.models.api_film_models import FilmFull
 from api.v1.models.api_genre_models import GenreBase
 from api.v1.models.api_person_models import PersonFull

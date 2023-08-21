@@ -1,4 +1,4 @@
-import aioredis
+from redis import asyncio as aioredis
 import core.config as conf
 import uvicorn
 from api.v1 import films, genres, persons

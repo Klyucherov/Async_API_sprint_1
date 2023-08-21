@@ -2,7 +2,7 @@ import abc
 from json.decoder import JSONDecodeError
 from typing import Any
 
-from redis import Redis
+from redis.asyncio import Redis
 
 
 class BaseStorage:
